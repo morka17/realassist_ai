@@ -33,7 +33,7 @@ class _AssistantChatMessageTileState extends State<AssistantChatMessageTile> {
 
   final _dataKey = GlobalKey();
 
-  bool _isLoading = false;
+  bool _isLoading = true;
 
   void retrieveStreamContent() async {
     subscription = widget.message.chatStream.listen((chat) {
