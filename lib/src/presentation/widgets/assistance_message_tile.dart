@@ -33,11 +33,12 @@ class _AssistantChatMessageTileState extends State<AssistantChatMessageTile> {
 
   final _dataKey = GlobalKey();
 
-  bool _isLoading = true;
+  bool _isLoading = false;
 
   void retrieveStreamContent() async {
     subscription = widget.message.chatStream.listen((chat) {
       for (var choice in chat.choices) {
+        print(choice);
         _isLoading = false;
         var content = choice.delta.content;
         print(content);
@@ -45,10 +46,13 @@ class _AssistantChatMessageTileState extends State<AssistantChatMessageTile> {
           data += (content ?? "");
         });
       }
+
+      Scrollable.ensureVisible(context);
     });
 
-    subscription?.onError((e) {
-      Get.snackbar("Error", e, borderColor: const Color(0XFFFF0000));
+    subscription?.onError((_) {
+      Get.snackbar("Error", "Unexpected error, try again",
+          borderColor: const Color(0XFFFF0000));
     });
 
     subscription?.onDone(() {
@@ -62,57 +66,57 @@ class _AssistantChatMessageTileState extends State<AssistantChatMessageTile> {
   Widget build(BuildContext context) {
     var f = DateFormat('hh:mm a');
 
-    return _isLoading
-        ? Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: 40,
-                width: 100,
-                padding: const EdgeInsets.only(left: 10),
-                alignment: Alignment.topLeft,
-                child: SpinKitThreeBounce(
-                  size: 35,
-                  itemBuilder: (BuildContext context, int index) {
-                    return DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: index.isEven ? Colors.black54 : Colors.black38,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          )
-        : Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
-            color: widget.message.metaData.userId == "user"
-                ? Colors.white
-                : const Color(0XFFFAFAFC),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  data.trimLeft(),
-                  key: _dataKey,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall!
-                      .copyWith(fontSize: 16, color: Colors.black),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  f.format(
-                    widget.message.metaData.createdTime,
+    if (_isLoading) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 40,
+            width: 100,
+            padding: const EdgeInsets.only(left: 10),
+            alignment: Alignment.topLeft,
+            child: SpinKitThreeBounce(
+              size: 35,
+              itemBuilder: (BuildContext context, int index) {
+                return DecoratedBox(
+                  decoration: BoxDecoration(
+                    color: index.isEven ? Colors.black54 : Colors.black38,
                   ),
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall!
-                      .copyWith(fontSize: 12),
-                )
-              ],
+                );
+              },
             ),
-          );
+          ),
+        ],
+      );
+    }
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+      color: widget.message.metaData.userId == "user"
+          ? Colors.white
+          : const Color(0XFFFAFAFC),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            data.trimLeft(),
+            key: _dataKey,
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall!
+                .copyWith(fontSize: 16, color: Colors.black),
+          ),
+          const SizedBox(height: 10),
+          Text(
+            f.format(
+              widget.message.metaData.createdTime,
+            ),
+            style:
+                Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 12),
+          )
+        ],
+      ),
+    );
   }
 }

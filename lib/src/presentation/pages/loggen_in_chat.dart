@@ -75,7 +75,6 @@ class _LoggenInChatState extends State<LoggenInChat> {
                 //    color: Colors.black,
                 child: chatProvider.chats.isNotEmpty
                     ? ListView.builder(
-                        controller: context.read<ChatProvider>().scrollController,
                         itemCount: chatProvider.chats.length,
                         itemBuilder: (context, index) {
                           var message = chatProvider.chats[index];
