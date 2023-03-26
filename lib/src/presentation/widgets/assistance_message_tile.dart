@@ -37,11 +37,10 @@ class _AssistantChatMessageTileState extends State<AssistantChatMessageTile> {
 
   void retrieveStreamContent() async {
     subscription = widget.message.chatStream.listen((chat) {
+      _isLoading = false;
       for (var choice in chat.choices) {
-        print(choice);
-        _isLoading = false;
         var content = choice.delta.content;
-        print(content);
+  
         setState(() {
           data += (content ?? "");
         });
@@ -51,8 +50,8 @@ class _AssistantChatMessageTileState extends State<AssistantChatMessageTile> {
     });
 
     subscription?.onError((_) {
-      Get.snackbar("Error", "Unexpected error, try again",
-          borderColor: const Color(0XFFFF0000));
+      // Get.snackbar("Error", "Unexpected error, try again",
+      //     borderColor: const Color(0XFFFF0000));
     });
 
     subscription?.onDone(() {

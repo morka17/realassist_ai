@@ -76,8 +76,8 @@ class ChatProvider extends ChangeNotifier {
     //print(chatStream);
 
     chatStreamResult.fold((l) {
-      Get.snackbar("Error", "unexpected error",
-          borderColor: const Color(0XFFFF0000));
+      // Get.snackbar("Error", "unexpected error",
+      //     borderColor: const Color(0XFFFF0000));
     }, (chatStream) {
       final metaData = MessageMetaData(
         userId: "assistant",        
