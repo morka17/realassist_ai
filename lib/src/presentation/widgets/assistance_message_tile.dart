@@ -49,10 +49,10 @@ class _AssistantChatMessageTileState extends State<AssistantChatMessageTile> {
       Scrollable.ensureVisible(context);
     });
 
-    subscription?.onError((_) {
-      // Get.snackbar("Error", "Unexpected error, try again",
-      //     borderColor: const Color(0XFFFF0000));
-    });
+    // subscription?.onError((_) {
+    //   // Get.snackbar("Error", "Unexpected error, try again",
+    //   //     borderColor: const Color(0XFFFF0000));
+    // });
 
     subscription?.onDone(() {
       subscription?.cancel();
